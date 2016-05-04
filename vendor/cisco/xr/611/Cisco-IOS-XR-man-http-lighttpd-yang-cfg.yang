@@ -1,0 +1,89 @@
+module Cisco-IOS-XR-man-http-lighttpd-yang-cfg {
+
+  /*** NAMESPACE / PREFIX DEFINITION ***/
+
+  namespace "http://cisco.com/ns/yang"+
+    "/Cisco-IOS-XR-man-http-lighttpd-yang-cfg";
+
+
+  prefix "man-http-lighttpd-yang-cfg";
+
+  /*** LINKAGE (IMPORTS / INCLUDES) ***/
+
+  import Cisco-IOS-XR-types { prefix "xr"; }
+
+  /*** META INFORMATION ***/
+
+  organization "Cisco Systems, Inc.";
+
+  contact
+    "Cisco Systems, Inc.
+     Customer Service
+
+     Postal: 170 West Tasman Drive
+     San Jose, CA 95134
+
+     Tel: +1 800 553-NETS
+
+     E-mail: cs-yang@cisco.com";
+
+  description 
+    "This module contains a collection of YANG definitions
+     for Cisco IOS-XR man-http-lighttpd-yang package configuration.
+
+     This module contains definitions
+     for the following management objects:
+       web: Webserver configuration commands
+
+     Copyright (c) 2013-2016 by Cisco Systems, Inc.
+     All rights reserved.";
+
+  revision "2015-11-09" {
+    description
+      "IOS XR 6.0 revision.";
+  }
+
+
+  container web {
+    xr:xr-xml-map "cfg_http_server:Web";
+    description "Webserver configuration commands";
+
+    container server {
+      xr:xr-xml-map "cfg_http_server:Server";
+      description "Webserver configuration commands";
+
+      container service {
+        xr:xr-xml-map "cfg_http_server:Service";
+        description "Web Service that needs to be activated";
+
+        container restconf {
+          xr:xr-xml-map "cfg_http_server:Restconf";
+          presence "Indicates a restconf node is configured.";
+          description "Restconf specific configurations";
+          leaf http-port {
+            xr:xr-xml-map "cfg_http_server:HttpPort";
+            type int32;
+            description "Port number http server is listening on";
+          }
+          leaf http-enable {
+            xr:xr-xml-map "cfg_http_server:HttpEnable";
+            type empty;
+            description
+              "Enable http connection in addition to https";
+          }
+          leaf https-port {
+            xr:xr-xml-map "cfg_http_server:HttpsPort";
+            type int32;
+            description "Port number https server is listening on";
+          }
+          leaf enable {
+            xr:xr-xml-map "cfg_http_server:Enable";
+            type empty;
+            mandatory true;
+            description "Enable RESTCONF Service";
+          }
+        }
+      }
+    }
+  }
+}

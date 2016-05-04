@@ -15,7 +15,7 @@ checkDir () {
     exit_status=""
     cwd=`pwd`
     cd $1
-    for f in Cisco-IOS-XR-*.yang; do
+    for f in Cisco-IOS-XR-*-cfg.yang Cisco-IOS-XR-*-oper.yang; do
 	errors=`pyang $pyang_flags $f 2>&1 | grep "error:"`
 	if [ ! -z "$errors" ]; then
 	    echo Errors in $f
@@ -29,7 +29,7 @@ checkDir () {
 }
 
 echo Checking modules with pyang command:
-printf "\n    pyang $pyang_flags MODULE\n\n"
+printf "\n    pyang $pyang_flags <YANG-MODULE>\n\n"
 
 cd $vendor_dir
 for d in $to_check; do

@@ -553,7 +553,7 @@ module Cisco-IOS-XR-ip-rsvp-oper {
             "Info about an RSVP-enabled interface counters";
           leaf interface-name {
             xr:xr-xml-map "oc_mpls_rsvp_oper:InterfaceName";
-            type xr:Cisco-ios-xr-string;
+            type xr:Interface-name;
             description "Interface name";
           }
           uses MPLS-RSVP-INTERFACE-COUNTERS;

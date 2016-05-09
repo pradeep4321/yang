@@ -2172,7 +2172,7 @@ module Cisco-IOS-XR-ipv4-ospf-cfg {
     description "Common node of default-vrf, vrf";
     leaf maximum-paths {
       xr:xr-xml-map "ipv4-ospf_cfg:MaximumPaths";
-      xr:xr-cli-map "ospf <string> vrf <string> maximum-paths <numb"+
+      xr:xr-cli-map "ospf <string> vrf <string> maximum paths <numb"+
         "er> ";
       type uint32 {
         range "1..64";

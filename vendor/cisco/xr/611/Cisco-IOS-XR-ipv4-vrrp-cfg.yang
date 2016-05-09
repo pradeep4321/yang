@@ -882,8 +882,8 @@ module Cisco-IOS-XR-ipv4-vrrp-cfg {
           description "BFD configuration";
           leaf interval {
             xr:xr-xml-map "vrrp_cfg:Interval";
-            xr:xr-cli-map "vrrp interface <interface> vrrp bfd mini"+
-              "mum-interval <number> ";
+            xr:xr-cli-map "vrrp interface <interface> bfd minimum-i"+
+              "nterval <number> ";
             type uint32 {
               range "3..30000";
             }
@@ -894,8 +894,8 @@ module Cisco-IOS-XR-ipv4-vrrp-cfg {
           }
           leaf detection-multiplier {
             xr:xr-xml-map "vrrp_cfg:DetectionMultiplier";
-            xr:xr-cli-map "vrrp interface <interface> vrrp bfd mult"+
-              "iplier <number> ";
+            xr:xr-cli-map "vrrp interface <interface> bfd multiplie"+
+              "r <number> ";
             type uint32 {
               range "2..50";
             }

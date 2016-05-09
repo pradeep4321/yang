@@ -393,25 +393,20 @@ module Cisco-IOS-XR-manageability-perfmgmt-cfg {
     leaf template-name {
       xr:xr-xml-map "manageability_perf_enable_stats_cfg:TemplateNa"+
         "me";
-      xr:xr-cli-map "(apply)|(enable) generic-counters (<string>)|("+
-        "default) ";
-      xr:xr-cli-map "bgp ";
-      xr:xr-cli-map "(apply)|(enable) v2protocol (<string>)|(defaul"+
-        "t) ";
-      xr:xr-cli-map "(apply)|(enable) v3protocol (<string>)|(defaul"+
-        "t) ";
+      xr:xr-cli-map "interface generic-counters ";
+      xr:xr-cli-map "(apply)|(enable) bgp (<string>)|(default) ";
+      xr:xr-cli-map "ospf v2protocol ";
+      xr:xr-cli-map "ospf v3protocol ";
       xr:xr-cli-map "(apply)|(enable) cpu location all (<string>)|("+
         "default) ";
       xr:xr-cli-map "(apply)|(enable) cpu location <location> (<str"+
         "ing>)|(default) ";
-      xr:xr-cli-map "(apply)|(enable) basic-counters (<string>)|(de"+
-        "fault) ";
+      xr:xr-cli-map "interface basic-counters ";
       xr:xr-cli-map "(apply)|(enable) process location all (<string"+
         ">)|(default) ";
       xr:xr-cli-map "(apply)|(enable) process location <location> ("+
         "<string>)|(default) ";
-      xr:xr-cli-map "(apply)|(enable) data-rates (<string>)|(defaul"+
-        "t) ";
+      xr:xr-cli-map "interface data-rates ";
       xr:xr-cli-map "(apply)|(enable) memory location all (<string>"+
         ")|(default) ";
       xr:xr-cli-map "(apply)|(enable) memory location <location> (<"+
@@ -431,19 +426,24 @@ module Cisco-IOS-XR-manageability-perfmgmt-cfg {
     leaf template-name {
       xr:xr-xml-map "manageability_perf_enable_thresh_cfg:TemplateN"+
         "ame";
-      xr:xr-cli-map "ospf v3protocol ";
+      xr:xr-cli-map "(apply)|(enable) v3protocol (<string>)|(defaul"+
+        "t) ";
       xr:xr-cli-map "(apply)|(enable) bgp (<string>)|(default) ";
-      xr:xr-cli-map "interface data-rates ";
-      xr:xr-cli-map "ospf v2protocol ";
+      xr:xr-cli-map "(apply)|(enable) data-rates (<string>)|(defaul"+
+        "t) ";
+      xr:xr-cli-map "(apply)|(enable) v2protocol (<string>)|(defaul"+
+        "t) ";
       xr:xr-cli-map "memory location <location> ";
       xr:xr-cli-map "memory location all ";
-      xr:xr-cli-map "interface generic-counters ";
+      xr:xr-cli-map "(apply)|(enable) generic-counters (<string>)|("+
+        "default) ";
       xr:xr-cli-map "cpu location <location> ";
       xr:xr-cli-map "cpu location all ";
       xr:xr-cli-map "mpls ldp ";
       xr:xr-cli-map "process location <location> ";
       xr:xr-cli-map "process location all ";
-      xr:xr-cli-map "interface basic-counters ";
+      xr:xr-cli-map "(apply)|(enable) basic-counters (<string>)|(de"+
+        "fault) ";
       type string;
       description "Template name";
     }

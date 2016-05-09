@@ -98,4 +98,17 @@ module Cisco-IOS-XR-cfgmgr-rollback-act {
             uses ROLLBACK-ATTRIBUTES;
         }
     }
+
+    rpc roll-back-configuration {
+        description "Rollback a specific commit";
+        csc:xr-task "root-system";
+        input {
+            leaf commit-id {
+                description "Commit ID";
+                type string;
+                mandatory true;
+            }
+            uses ROLLBACK-ATTRIBUTES;
+        }
+    }
 }

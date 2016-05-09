@@ -128,7 +128,7 @@ module Cisco-IOS-XR-ipv4-arp-cfg {
         list entry {
           xr:xr-xml-map "arp_cfg:Entry";
           xr:xr-cli-map "arp [vrf <string>] <IPv4 address> <MAC add"+
-            "ress> <enum> [alias] ";
+            "ress> <enum> [alias] [interface <interface>] ";
           key "address";
           description
             "ARP static and alias entry configuration item";
@@ -151,6 +151,11 @@ module Cisco-IOS-XR-ipv4-arp-cfg {
             xr:xr-xml-map "arp_cfg:EntryType";
             type Arp-entry;
             description "Entry type";
+          }
+          leaf interface {
+            xr:xr-xml-map "arp_cfg:interface";
+            type xr:Interface-name;
+            description "Interface name";
           }
         }
       }

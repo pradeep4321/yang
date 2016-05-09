@@ -1,0 +1,168 @@
+module Cisco-IOS-XR-ncs1k-mxp-logical-channel-cfg {
+
+  /*** NAMESPACE / PREFIX DEFINITION ***/
+
+  namespace "http://cisco.com/ns/yang"+
+    "/Cisco-IOS-XR-ncs1k-mxp-logical-channel-cfg";
+
+
+  prefix "ncs1k-mxp-logical-channel-cfg";
+
+  /*** LINKAGE (IMPORTS / INCLUDES) ***/
+
+  import Cisco-IOS-XR-types { prefix "xr"; }
+
+  /*** META INFORMATION ***/
+
+  organization "Cisco Systems, Inc.";
+
+  contact
+    "Cisco Systems, Inc.
+     Customer Service
+
+     Postal: 170 West Tasman Drive
+     San Jose, CA 95134
+
+     Tel: +1 800 553-NETS
+
+     E-mail: cs-yang@cisco.com";
+
+  description 
+    "This module contains a collection of YANG definitions
+     for Cisco IOS-XR ncs1k-mxp-logical-channel package configuration.
+
+     This module contains definitions
+     for the following management objects:
+       optical-logical-interfaces: Logical channel in mxp
+       optical-channels: optical channels
+
+     Copyright (c) 2013-2016 by Cisco Systems, Inc.
+     All rights reserved.";
+
+  revision "2015-11-09" {
+    description
+      "IOS XR 6.0 revision.";
+  }
+
+  typedef Logical-channel-assignment {
+    type enumeration {
+      enum type-logical-channel {
+        value 1;
+        description "Type Logical channel";
+      }
+      enum type-optical-channel {
+        value 2;
+        description "Type Optical channel";
+      }
+    }
+    description "Logical channel assignment";
+  }
+
+  container optical-logical-interfaces {
+    xr:xr-xml-map "mxp_oc_logical_channel_cfg:OpticalLogicalInterfa"+
+      "ces";
+    description "Logical channel in mxp";
+
+    list optical-logical-interface {
+      xr:xr-xml-map "mxp_oc_logical_channel_cfg:OpticalLogicalInter"+
+        "face";
+      key "channel-index";
+      description "Logical channel index";
+
+      container "optical-logical-interface-logical-channel"+
+        "-assignments" {
+        xr:xr-xml-map "mxp_oc_logical_channel_cfg:LogicalChannelAss"+
+          "ignmentTable";
+        description
+          "Logical channel assignment for logical channel";
+
+        list optical-logical-interface-logical-channel-assignment {
+          xr:xr-xml-map "mxp_oc_logical_channel_cfg:OpticalLogicalI"+
+            "nterfaceLogicalChannelAssignment";
+          key "assignment-index";
+          description "Logical Channel Assignment id";
+          leaf description {
+            xr:xr-xml-map "mxp_oc_logical_channel_cfg:Description";
+            type string {
+              length "0..255";
+            }
+            description "Configure description for this assignment";
+          }
+          leaf logical-channel-id {
+            xr:xr-xml-map "mxp_oc_logical_channel_cfg:LogicalChanne"+
+              "lId";
+            type int32;
+            description
+              "Configure logical channel for this assignment";
+          }
+          leaf assignment-type {
+            xr:xr-xml-map "mxp_oc_logical_channel_cfg:AssignmentTyp"+
+              "e";
+            type Logical-channel-assignment;
+            description "Type of assignment for logical channel";
+          }
+          leaf allocation {
+            xr:xr-xml-map "mxp_oc_logical_channel_cfg:Allocation";
+            type int32;
+            description
+              "Configure Allocation for this assignment(10,
+              40 or 100G)";
+          }
+          leaf optical-channel-id {
+            xr:xr-xml-map "mxp_oc_logical_channel_cfg:OpticalChanne"+
+              "lId";
+            type int32;
+            description
+              "Configure optical channel for this assignment";
+          }
+          leaf assignment-index {
+            xr:xr-xml-map "mxp_oc_logical_channel_cfg:AssignmentInd"+
+              "ex";
+            type int32;
+            description "Logical channel assignment index";
+          }
+        }
+      }
+      leaf channel-index {
+        xr:xr-xml-map "mxp_oc_logical_channel_cfg:ChannelIndex";
+        type int32;
+        description "Logical Channel Index";
+      }
+    }
+  }
+
+  container optical-channels {
+    xr:xr-xml-map "mxp_oc_optical_channel_cfg:OpticalChannels";
+    description "optical channels";
+
+    list optical-channel {
+      xr:xr-xml-map "mxp_oc_optical_channel_cfg:OpticalChannel";
+      key "channel-index";
+      description "Optical Channel index";
+      leaf line-port {
+        xr:xr-xml-map "mxp_oc_optical_channel_cfg:LinePort";
+        type xr:Interface-name;
+        description "Specify R/S/I/P";
+      }
+      leaf frequency {
+        xr:xr-xml-map "mxp_oc_optical_channel_cfg:Frequency";
+        type uint32 {
+          range "19115..19610";
+        }
+        description "Configure optical channel frequency";
+      }
+      leaf power {
+        xr:xr-xml-map "mxp_oc_optical_channel_cfg:Power";
+        type int32 {
+          range "-190..15";
+        }
+        description "Select power level (in units of 0.1dBm)";
+      }
+      leaf channel-index {
+        xr:xr-xml-map "mxp_oc_optical_channel_cfg:ChannelIndex";
+        type int32;
+        description "Optical Channel Index";
+      }
+    }
+  }
+}

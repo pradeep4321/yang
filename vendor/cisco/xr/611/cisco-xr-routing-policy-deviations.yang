@@ -7,7 +7,7 @@ module cisco-xr-routing-policy-deviations {
   prefix "cisco-xr-rpol-devs";
 
   /*** LINKAGE (IMPORTS / INCLUDES) ***/
-  import openconfig-routing-policy { prefix rpol; }
+  import routing-policy { prefix rpol; }
 
   /*** META INFORMATION ***/
   organization "Cisco Systems, Inc.";

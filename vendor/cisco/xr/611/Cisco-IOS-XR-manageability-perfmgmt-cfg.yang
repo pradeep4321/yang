@@ -440,7 +440,7 @@ module Cisco-IOS-XR-manageability-perfmgmt-cfg {
       xr:xr-cli-map "interface generic-counters ";
       xr:xr-cli-map "cpu location <location> ";
       xr:xr-cli-map "cpu location all ";
-      xr:xr-cli-map "(apply)|(enable) ldp (<string>)|(default) ";
+      xr:xr-cli-map "mpls ldp ";
       xr:xr-cli-map "process location <location> ";
       xr:xr-cli-map "process location all ";
       xr:xr-cli-map "interface basic-counters ";

@@ -1,0 +1,28 @@
+module cisco-acl-oper-ann {
+  namespace "http://cisco.com/ns/cisco-acl-oper-ann";
+  prefix acl-ann;
+
+  import cisco-acl-oper {
+    prefix acl-oper;
+  }
+  import ned {
+    prefix ned;
+  }
+  
+  import tailf-common {
+    prefix tailf;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+//  tailf:annotate /ned:native/acl-oper:access-lists {
+//    tailf:callpoint "cia_on_demand";
+//  }
+}

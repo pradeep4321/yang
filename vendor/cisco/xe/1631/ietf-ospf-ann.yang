@@ -1,0 +1,29 @@
+module ietf-ospf-ann {
+  namespace "http://cisco.com/ns/ietf-ospf/ann";
+  prefix ospf-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-routing {
+    prefix rt;
+  }
+
+  import ietf-ospf {
+    prefix ospf;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+}

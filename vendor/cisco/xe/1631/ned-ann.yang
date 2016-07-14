@@ -1,0 +1,39 @@
+module ned-ann {
+  namespace "http://cisco.com/ios/ned-ann";
+  prefix ios-ann;
+
+  import ned {
+    prefix ios;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate "/ios:native/ios:vrf/ios:definition" {
+    tailf:callpoint ec_genet {
+      tailf:transaction-hook subtree;
+    }
+  }
+
+  tailf:annotate "/ios:native/ios:router/ios:bgp" {
+    tailf:callpoint ec_genet {
+      tailf:transaction-hook subtree;
+    }
+  }
+
+  tailf:annotate "/ios:native/ios:route-map" {
+    tailf:callpoint ec_genet {
+      tailf:transaction-hook subtree;
+    }
+  }
+}

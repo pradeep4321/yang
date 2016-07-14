@@ -1,0 +1,29 @@
+module ietf-routing-ann {
+  namespace "http://cisco.com/ns/ietf-routing/ann";
+  prefix routing-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-routing {
+    prefix routing;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate /routing:routing {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+//  tailf:annotate /routing:routing-state {
+//    tailf:callpoint "cia_on_demand";
+//  }
+}

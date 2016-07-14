@@ -1,0 +1,30 @@
+module cisco-qos-action-oper-ann {
+  namespace "urn:cisco:params:xml:ns:yang:cisco-qos-action-oper/ann";
+  prefix qos-stats-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-interfaces {
+    prefix if;
+  } 
+ 
+  import ietf-diffserv-target {
+    prefix target;
+  }
+
+  import cisco-qos-action-oper {
+    prefix qos-stats;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+}

@@ -1,0 +1,25 @@
+module ietf-diffserv-policy-ann {
+  namespace "http://cisco.com/ns/ietf-diffserv-policy/ann";
+  prefix policy-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-diffserv-policy {
+    prefix policy;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate /policy:policies {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+}

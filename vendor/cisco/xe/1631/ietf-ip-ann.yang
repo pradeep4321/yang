@@ -1,0 +1,34 @@
+module ietf-ip-ann {
+  namespace "http://cisco.com/ns/ietf-ip/ann";
+  prefix ip-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  import ietf-ip {
+    prefix ip;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-05-10 {
+    description
+      "Updated namespace and prefix.";
+  }
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate "/if:interfaces/if:interface/ip:ipv4" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+}

@@ -1,0 +1,27 @@
+module dsl {
+  namespace "http://irk_man/yang/dsl";
+  prefix dsl;
+
+  description "Annotation Language for specifications of mappings";
+
+  extension enable;
+
+  extension def {
+    argument definitions;
+  }
+  extension map {
+    argument mappings;
+  }
+  extension get {
+    argument mappings;
+  }
+  extension set {
+    argument mappings;
+  }
+  extension create {
+    argument mappings;
+  }
+  extension delete {
+    argument mappings;
+  }
+}

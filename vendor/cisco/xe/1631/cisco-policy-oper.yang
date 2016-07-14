@@ -1,0 +1,671 @@
+/*-------------------------------------------------------------------
+ *  cisco-policy-oper.yang - Definition of extended operational model
+ *  on target
+ * module for Yang policy Common Model 
+ * 
+ *  May 2015, Nazanin Magharei 
+ *                                                               
+ *-------------------------------------------------------------------
+ */
+ 
+module cisco-policy-oper {
+  yang-version 1;
+  namespace "urn:ietf:params:xml:ns:yang:cisco-policy-oper";
+  prefix cisco-policy-oper;
+ 
+  import ietf-interfaces {
+    prefix if;
+  }
+  
+  import ietf-diffserv-target {
+        prefix ietf-target;
+  }
+  
+  import ietf-yang-types {
+        prefix yang;
+  }
+  
+  import policy-attr {
+        prefix policy-attr;
+  }
+  
+  import ietf-diffserv-classifier {
+        prefix classifier;
+  }
+
+  organization "Cisco Systems, Inc.";
+  contact
+    "Cisco Systems, Inc.
+    Customer Service
+
+    Postal: 170 W Tasman Drive
+    San Jose, CA 95134
+
+    Tel: +1 1800 553-NETS
+
+    E-mail: cs-yang@cisco.com
+     
+    Editor:   Nazanin Magharei
+               <mailto:nmaghare@cisco.com>";
+  description
+    "This module contains a collection of YANG definitions 
+     extending operational module based on IETF-diffserv target.
+     Copyright (c) 2016 by Cisco Systems, Inc.
+     All rights reserved.";
+
+  revision "2016-03-30" {
+    description
+      "Update description with copyright notice.";
+  }
+     
+  revision "2015-04-27" {
+        description "First revision";
+        reference "TBD";
+  }
+
+
+  grouping filter-statistics {
+       description
+      "Filter statistics counters";
+      container filter-statistics {
+          description
+          "Filter statistics counters";
+          leaf packets { 
+              type yang:zero-based-counter64;
+              description
+              " Number of total packets which matches
+              to this filter";
+          }
+          leaf bytes { 
+              type yang:zero-based-counter64;
+              description
+              " Number of total bytes which matches
+              to this filter";
+          }
+          leaf offered-rate {
+              type uint64; 
+              units "bits-per-second";
+              description
+              "Rate of average data flow which matches
+              to this filter";
+          }
+          leaf drop-rate {
+              type uint64; 
+              units "bits-per-second";
+              description
+              "Rate of dropped packets which matches
+              to this filter";
+          }
+      }
+   }
+  grouping configured-filter-stats {
+      description
+      "Statistics of configured filters";
+      container configured-filters {        
+          list configured-filter {
+              key "filter-type";
+              leaf filter-type {
+                  type identityref {
+                      base classifier:filter-type;
+                  }
+                  description
+                     "Type of the configured filter";
+              }
+              choice configured-val {
+                when "filter-type = ''";
+                case dscp {
+                      container dscp-value-lists {
+                          list dscp-value-list {
+                              key "dscp-min dscp-max";
+                              uses policy-attr:dscp-cfg;
+                              uses filter-statistics;
+                              description 
+                              "Configured match \
+                              dscp value(s)";
+                          }
+                          description 
+                            "Statistics for configured match \
+                             dscp value(s)";
+                      }
+                }
+                case cos {
+                     container cos-value-lists {
+                        list cos-value-list {
+                            key "cos-min cos-max";
+                            uses policy-attr:cos-cfg;
+                            uses filter-statistics;
+                            description 
+                            "Configured match \
+                             Class-of-Service (COS) value(s)";
+                        }
+                        description 
+                            "Statistics for configured match 
+                            Class-of-Service (COS) value(s)";
+                    }
+                }
+                case source-ip-address {
+                    container source-ip-address-value-lists {
+                        list source-ip-address-value-list {
+                            key "src-dst-ip-addr";
+                            uses policy-attr:src-dst-ip-cfg;
+                            uses filter-statistics;
+                            description
+                             "Configured match \
+                             source ip address value(s)";
+                        }
+                        description
+                             "Statistics for configured match \
+                             source ip address value(s)";
+                    }
+                }
+                case destination-ip-address {
+                    container destination-ip-address-value-lists {
+                        list destination-ip-address-value-list {
+                            key "src-dst-ip-addr";
+                            uses policy-attr:src-dst-ip-cfg;
+                            uses filter-statistics;     
+                            description
+                             "Configured match \
+                             destination ip address value(s)";
+                        }
+                        description
+                             "Statistics for configured match \
+                             destination ip address value(s)";
+                    }
+                }  
+                case source-port {
+                    container source-port-value-lists {
+                        list source-port-value-list {
+                            key "src-dst-port-min src-dst-port-max";
+                            uses policy-attr:src-dst-port-cfg;
+                            uses filter-statistics;
+                            description
+                             "Configured match \
+                             source port value(s)";
+                        }
+                        description
+                             "Statistics for configured match \
+                             source port value(s)";
+                    }
+                }
+                case destination-port {
+                    container destination-port-value-lists {
+                        list destination-port-value-list {
+                            key "src-dst-port-min src-dst-port-max";
+                            uses policy-attr:src-dst-port-cfg;
+                            uses filter-statistics;
+                            description
+                               "Configured match \
+                             source port value(s)";
+                            }
+                        description
+                               "Statistics for configured match \
+                             source port value(s)";
+                    }
+                }
+                case protocol {
+                    container protocol-value-lists {
+                        list protocol-value-list {
+                            key "protocol-name";
+                            uses policy-attr:protocol-cfg;
+                            uses filter-statistics;
+                            description
+                            "Configured match \
+                              protocol value(s)";
+                        }
+                        description
+                            "Statistics for configured match \
+                              protocol value(s)";
+                    }        
+                }
+                case cos-inner {
+                    container cos-inner-value-lists {
+                        list cos-inner-value-list {
+                            key "cos-min cos-max";
+                            uses policy-attr:cos-cfg;
+                            uses filter-statistics;
+                            description
+                            "Configured match \
+                              cos-inner value(s)";
+                        }
+                        description
+                            "Statistics for configured match \
+                              cos-inner value(s)";
+                    }
+                }       
+                case ipv4-acl-name {
+                    container ipv4-acl-name-value-lists {
+                        list ipv4-acl-name-value-list {
+                            key "ip-acl-name";
+                            uses policy-attr:ip-acl-name-cfg;
+                            uses filter-statistics;
+                            description
+                            "Configured match \
+                              IPv4 ACL name(s)";
+                        }
+                        description
+                            "Statistics for configured match \
+                              IPv4 ACL name(s)";
+                    }
+                }
+                case ipv6-acl-name {
+                    container ipv6-acl-name-value-lists {
+                        list ipv6-acl-name-value-list {
+                            key "ip-acl-name";
+                            uses policy-attr:ip-acl-name-cfg;
+                            uses filter-statistics;
+                            description
+                            "Configured match \
+                              IPv6 ACL name(s)";
+                        }
+                        description
+                            "Statistics for configured match \
+                              IPv6 ACL name(s)";
+                    }
+                }
+                case ipv4-acl {
+                    container ipv4-acl-value-lists {
+                        list ipv4-acl-value-list {
+                            key "ip-acl";
+                            uses policy-attr:ip-acl-cfg;
+                            uses filter-statistics;
+                            description
+                            "Configured match \
+                              IPv4 ACL number(s)";
+                        }
+                        description
+                            "Statistics for configured match \
+                              IPv4 ACL number(s)";
+                    }
+                }
+                case ipv6-acl {
+                    container ipv6-acl-value-lists {
+                        list ipv6-acl-value-list {
+                            key "ip-acl";
+                            uses policy-attr:ip-acl-cfg;
+                            uses filter-statistics;
+                            description
+                            "Configured match \
+                              IPv6 ACL number(s)";
+                        }
+                        description
+                            "Statistics for configured match \
+                              IPv6 ACL number(s)";
+                    }
+                }
+                case input-interface {
+                    container input-interface-value-lists {
+                        list input-interface-value-list {
+                            key "if-name";
+                            uses policy-attr:input-interface-cfg;
+                            uses filter-statistics;
+                            description
+                            "Configured match \
+                              input interface(s)";
+                        }
+                        description
+                            "Statistics for configured match \
+                              input interface(s)";
+                    }             
+                }
+                case src-mac {
+                    container src-mac-value-lists {
+                        list src-mac-value-list{
+                            key "mac";
+                            uses policy-attr:mac-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                              source mac address(es).";
+                        }
+                        description "Statistics for configured match 
+                        source mac address(es).";
+                    }
+                }
+                case dst-mac {
+                    container dst-mac-value-lists {
+                        list dst-mac-value-list{
+                            key "mac";
+                            uses policy-attr:mac-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                              destination mac address(es).";
+                        }
+                        description "Statistics for configured match 
+                        destination mac address(es).";
+                    }             
+                }
+                case mpls-exp-top {
+                    container mpls-exp-top-value-lists {
+                        list mpls-exp-top-value-list{
+                            key "exp-min exp-max";
+                            uses policy-attr:mpls-exp-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                              MPLS exp top value(s)";
+                        }
+                        description "Statistics for configured match 
+                              MPLS exp top value(s)";
+                    }
+                }
+                case mpls-exp-imp {
+                    container mpls-exp-impl-value-lists {
+                        list mpls-exp-imp-value-list{
+                            key "exp-min exp-max";
+                            uses policy-attr:mpls-exp-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                              MPLS exp Imposition value(s).";
+                        }
+                        description "Statistics for configured match 
+                              MPLS exp Imposition value(s).";
+                    }
+                }
+                case packet-length {
+                    container pkt-len-value-lists {
+                        list pkt-len-value-list{
+                            key "min-pkt-len max-pkt-len";
+                            uses policy-attr:pkt-len-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                            Packet Length value(s)";
+                        }
+                        description "Statistics for configured match 
+                            Packet Length value(s)";
+                    }
+                }
+                case prec {
+                      container prec {
+                        choice prec-par {
+                            case prec-value{
+                                container prec-val-value-lists {
+                                    list prec-val-value-list{
+                                        key "prec-val";
+                                        uses policy-attr:prec-val-cfg;
+                                        uses filter-statistics;
+                                        description "Configured match 
+                                        precendence value(s)";
+                                    }
+                                    description "Statistics for \ 
+                                        configured match \
+                                        precendence value(s)";
+                                }
+                            }
+                            case prec-attr{
+                                container prec-attr-value-lists {
+                                    list prec-attr-value-list{
+                                        key "prec-attr";
+                                        uses policy-attr:prec-attr-cfg;
+                                        uses filter-statistics;
+                                        description "Configured \
+                                        match precendence attribute \
+                                        value(s)";
+                                    }
+                                    description "Statistics for \ 
+                                    configured match \
+                                    precendence attribute value(s)";
+                                }
+                            }
+                            description "Statistics for \ 
+                                    configured match \
+                                    precendence value or attribute";
+                        }
+                        description "Statistics for \ 
+                                    configured match \
+                                    precendence value or attribute";
+                    }
+                }
+                case qos-group {
+                    container qos-group-value-lists {
+                        list qos-group-value-list {
+                            key "qos-group-min qos-group-max";
+                            uses policy-attr:qos-group-cfg;
+                            uses filter-statistics;
+                             description "Configured match \
+                            QoS Group value(s)";
+                        }
+                        description "Statistics for configured match
+                            QoS Group value(s)";
+                       }
+                }
+                case vlan {
+                    container vlan-value-lists {
+                        list vlan-value-list {
+                            key "vlan-min vlan-max";
+                            uses policy-attr:vlan-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                            vlan value(s)";
+                        }
+                        description "Statistics for configured match
+                            vlan value(s)";
+                    }    
+                }
+                case vlan-inner {
+                    container vlan-inner-value-lists {
+                        list vlan-inner-value-list {
+                            key "vlan-min vlan-max";
+                            uses policy-attr:vlan-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                            vlan inner value(s)";
+                        }
+                        description "Statistics for configured match
+                            vlan inner value(s)";
+                    }
+                }
+                case atm-clp {
+                    container atm-clp-value {
+                        uses policy-attr:atm-clp-cfg;
+                        description "Statistics for configured match 
+                        ATM Cell Loss Priority (CLP)";
+                        uses filter-statistics;
+                    }
+                }
+                case atm-vci {
+                    container atm-vci-value-lists {      
+                        list atm-vci-value-list{
+                            key "atm-vci-min atm-vci-max";
+                            uses policy-attr:atm-vci-cfg;
+                            uses filter-statistics;
+                            description "Configured match 
+                        ATM Virtual Channel Identifier (VCI) 
+                        value(s)";
+                        }
+                        description "Statistics for configured match 
+                        ATM Virtual Channel Identifier (VCI) 
+                        value(s)";
+                    }
+                }
+        //Not in IOS/XE asr1k
+                case dei {
+                    container dei-value{
+                        uses policy-attr:dei-cfg;
+                        description "Statistics for configured match 
+                        DEI Bit";
+                        uses filter-statistics;
+                    }
+                }
+        //Not in IOS/XE asr1k
+                case dei-inner {
+                    container dei-inner-value{
+                        uses policy-attr:dei-cfg;
+                        description "Statistics for configured match 
+                        inner DEI Bit";
+                        uses filter-statistics;
+                    }
+                }
+        //Not in IOS/XE asr1k
+                case flow-ip{
+                    container flow-ip-value{
+                        uses policy-attr:flow-cfg;
+                        description "Statistics for configured match 
+                        flow";
+                        uses filter-statistics;
+                    }
+                }
+        //Not in IOS/XE asr1k
+                case flow-record {
+                    container flow-record-value{
+                        uses policy-attr:flow-record-cfg;
+                        description "Statistics for configured match 
+                        flow record name.";
+                        uses filter-statistics;
+                    }
+                }
+                case fr-de {
+                    container fr-de-value {
+                        uses policy-attr:fr-de-cfg;
+                        description "Statistics for configured match 
+                        Frame Relay DE.";
+                        uses filter-statistics;
+                    }
+                }
+                case fr-dlci {
+                    container fr-dlci-value-lists {
+                        list fr-dlci-value-list{
+                            key "dlci-min dlci-max";
+                            uses policy-attr:fr-dlci-cfg; 
+                            uses filter-statistics;
+                            description "Configured match \
+                            Frame Relay DLCI value(s).";
+                        }
+                        description "Statistics for configured match 
+                            Frame Relay DLCI value(s).";
+                    }
+                }
+        //Not in IOS/XE asr1k
+                case wlan-user-priority {
+                    container wlan-user-priority-value-lists {
+                        list wlan-user-priority-value-list{
+                            key "wlan-prio-min wlan-prio-max";
+                            uses policy-attr:wlan-user-priority-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                            Wlan User Priority value(s).";
+                        }
+                        description "Statistics for configured match 
+                        Wlan User Priority value(s).";
+                    }
+                }
+                case discard-class {
+                    container discard-class-value-lists {
+                        list discard-class-value-list{
+                            key "discard-class";
+                            uses policy-attr:discard-class-cfg;
+                            uses filter-statistics; 
+                            description "Configured match \
+                            discard class value(s).";
+                        }
+                        description "Statistics for configured match 
+                        discard class value(s).";
+                    }
+                }
+                case class-map {
+                    container class-map-value-lists {
+                        list class-map-value-list{
+                            key "class-map-name";
+                            uses policy-attr:class-map-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                            class-map name(s).";
+                        }
+                        description "Statistics for configured match 
+                        class-map name(s).";
+                    }
+                }
+                case metadata {
+                    container metadata-value {
+                        uses policy-attr:metadata-cfg;
+                        description "Statistics for configured match 
+                        metadata.";
+                        uses filter-statistics;
+                    }
+                }
+                case application{
+                    container application-value-lists {
+                        list application-value-list{
+                            key "application-name application-cfg";
+                            uses policy-attr:application-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                        application value(s).";
+                        }
+                        description "Statistics for configured match 
+                        application value(s).";
+                    }
+                }  
+                case security-group {
+                    container security-group-value {
+                        choice group-par {
+                            case group-name{
+                                container security-group-name-value-lists {
+                                    list security-group-name-value-list{
+                                        key "src-dst security-name";
+                                        uses policy-attr:security-group-name-cfg;
+                                        uses filter-statistics;
+                                        description "Configured match 
+                                        secruity group name(s).";
+                                    }
+                                    description "Statistics for \ 
+                                        configured match \
+                                        secruity group name(s).";
+                                }
+                            }
+                            case group-tag{
+                                container security-group-tag-value-lists {
+                                    list security-group-tag-value-list{
+                                        key "id";
+                                        uses policy-attr:security-group-tag-cfg;
+                                        uses filter-statistics;
+                                        description "configured \
+                                        match secruity group tag \
+                                        ID(s).";
+                                    }
+                                    description "Statistics for \
+                                        configured match \
+                                        secruity group tag ID(s).";
+                                }
+                            }
+                            description "Statistics for \ 
+                                        configured match \
+                                        secruity group tag ID or \
+                                        group name.";
+                        }
+                        description "Statistics for \ 
+                                     configured match \
+                                     secruity group tag ID or group \
+                                     name.";
+                    }
+                }     
+                case ip-rtp {
+                    container ip-rtp-value-lists {
+                        list ip-rtp-value-list{
+                            key "starting-port-number port-range";
+                            uses policy-attr:ip-rtp-cfg;
+                            uses filter-statistics;
+                            description "Configured match \
+                                        IP RTP value(s).";
+                        }
+                        description "Statistics for configured \
+                                        match IP RTP value(s).";
+                    }
+                }
+                description 
+                "Choice of configured filter";
+            }
+            description
+           "List of configured filters";
+        }
+        description
+       "Statistics of configured filters";
+      }
+  }
+  
+  augment "/if:interfaces/if:interface/ietf-target:diffserv-target-entry/"
+        + "ietf-target:diffserv-target-classifier-statistics" {
+            description
+            "Augments Cisco Policy Operational module to Interface 
+            module";
+            uses configured-filter-stats;
+        }
+}

@@ -1,0 +1,59 @@
+/*-------------------------------------------------------------------
+ *  cisco-qos-action-priority-cfg.yang - Action priority
+ * 
+ *  April 2015, Xia Wu   
+ *                                           
+ *  Copyright (c) 2015 by Cisco Systems, Inc.
+ *  All rights reserved.                     
+ *-------------------------------------------------------------------
+ */
+module cisco-qos-action-priority-cfg {
+    namespace "urn:cisco:params:xml:ns:yang:cisco-qos-action-priority-cfg";
+    prefix priority;
+
+    import ietf-diffserv-action {
+        prefix action;
+    }
+
+    import ietf-diffserv-policy {
+        prefix policy;
+    }
+
+    import cisco-qos-common {
+        prefix qos;
+    }
+ 
+    organization "Cisco Systems";
+    contact
+    "Editor:   Xia Wu
+               <mailto:xiaw2@cisco.com>";
+    description
+    "This module contains YANG definitions for
+    configuring priority
+     
+    Copyright (c) 2015 by Cisco Systems, Inc.
+    All rights reserved.";
+    
+    revision 2015-05-09 {
+        description "first revision";
+        reference "ietf-diffserv-action.yang";
+    }
+
+    feature priority-rate-burst-support {
+        description "support rate and burst in priority";
+    }
+    
+    augment  "/policy:policies/policy:policy-entry"
+        + "/policy:classifier-entry"
+        + "/policy:classifier-action-entry-cfg/"
+        + "policy:action-cfg-params/action:priority-cfg" {
+            description "extend the priority-cfg to add the rate burst";
+            container rate-burst {
+                if-feature priority-rate-burst-support;
+                uses qos:RATE-OPER;
+                uses qos:BURST-OPER; 
+                description "absolute priority rate with/without burst rate" + 
+                    "and absolute percent";
+            }
+        }
+}

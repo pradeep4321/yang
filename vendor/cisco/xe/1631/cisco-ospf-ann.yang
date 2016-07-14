@@ -1,0 +1,74 @@
+module cisco-ospf-ann {
+  namespace "http://cisco.com/ns/cisco-ospf/ann";
+  prefix cisco-ospf-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-routing {
+    prefix rt;
+  }
+
+  import ietf-ospf {
+    prefix ospf;
+  }
+
+  import cisco-ospf {
+    prefix cisco-ospf;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" 
+	+ "/ospf:instance/ospf:admin-distance/cisco-ospf:ospf-distance" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" 
+	+ "/ospf:instance/ospf:spf-control/cisco-ospf:throttle-timers" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" 
+	+ "/ospf:instance/ospf:database-control/cisco-ospf:max-lsa-options" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" 
+	+ "/ospf:instance/ospf:database-control/cisco-ospf:lsa" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" 
+	+ "/ospf:instance/cisco-ospf:default-metric" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" 
+	+ "/ospf:instance/cisco-ospf:redistribution" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" 
+	+ "/ospf:instance/cisco-ospf:log-adjacency-changes" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" 
+	+ "/ospf:instance/cisco-ospf:default-information" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+  tailf:annotate "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf" 
+	+ "/ospf:instance/cisco-ospf:discard-route" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+}

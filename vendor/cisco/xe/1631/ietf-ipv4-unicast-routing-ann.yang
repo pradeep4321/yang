@@ -1,0 +1,30 @@
+module ietf-ipv4-unicast-routing-ann {
+  namespace "http://cisco.com/ns/ietf-ipv4-unicast-routing/ann";
+  prefix v4ur-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-routing {
+    prefix routing;
+  }
+
+  import ietf-ipv4-unicast-routing {
+    prefix v4-unicast;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate "/routing:routing/routing:routing-instance/routing:routing-protocols/"
+           + "routing:routing-protocol/routing:static-routes/v4-unicast:ipv4" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+}

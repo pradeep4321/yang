@@ -1,0 +1,641 @@
+module cisco-acl {
+  yang-version 1;
+  namespace "urn:ietf:params:xml:ns:yang:cisco-acl";
+  prefix cisco-acl;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import ietf-yang-types {
+    prefix ietf;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import ietf-acl {
+    prefix ietf-acl;
+  }
+  import ietf-packet-fields {
+    prefix packet-fields;
+  }
+  import cisco-og {
+    prefix og;
+  }
+
+  organization 
+    "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
+  contact
+    "
+     Author: Hang Shi 
+     hangshi@cisco.com 
+     
+     Author: Shiyang Song
+     shiysong@cisco.com 
+         
+     Author: Yuekun Li
+     yuekli@cisco.com
+     
+    ";
+  description
+    "This YANG module defines a component that describing the "+ 
+    "configuration of Access Control Lists (ACLs).";
+
+  revision 2014-10-10 {
+    description
+      "Creating base model for netmod.";
+    reference
+      "RFC 6020: YANG - A Data Modeling Language for the 
+       Network Configuration Protocol (NETCONF)";
+  }
+
+  feature acl-common-support {
+    description
+      "Support of Common.";
+  }
+
+  feature interface-stats-support {
+    description
+      "Support per interface stats.";
+  }
+
+  feature hardware-count-support {
+    description
+      "Support hardware count.";
+  }
+
+  feature compression-level-support {
+    description
+      "Support compression level.";
+  }
+
+  feature abf-support {
+    description
+      "Support address based forwarding.";
+  }
+
+  feature tos-support {
+    description
+      "Support matching terms of service.";
+  }
+
+  feature noncont-port-support {
+    description
+      "Support non-contiguous ports.";
+  }
+
+  feature access-list-entry-counter-support {
+    description
+      "Support access-list entry hardware staticstics.";
+  }
+
+  augment "/if:interfaces/if:interface" {
+    description
+      "Access-group configuration under interface.";
+    container access-group-in {
+      description
+        "Access-group for inbound direction.";
+      list access-lists {
+        key "acl-name";
+        description
+          "List of common access-list.";
+        leaf acl-name {
+          type ietf-acl:access-control-list-ref;
+          description
+            "Access Control List name.";
+        }
+        choice apply-type {
+          description
+            "Access Control List apply type.";
+          case apply-common {
+            if-feature acl-common-support;
+            leaf common-acl {
+              type empty;
+              description
+                "Common Access Control List.";
+            }
+          }
+          case apply-intf {
+            leaf intf-acl {
+              type empty;
+              description
+                "Interface Access Control List.";
+            }
+          }
+        }
+      }
+      leaf interface-stats {
+        if-feature interface-stats-support;
+        type empty;
+        description
+          "Access Control List per interface statistics.";
+      }
+      leaf hardware-count {
+        if-feature hardware-count-support;
+        type empty;
+        description
+          "Access Control List hardware count.";
+      }
+      leaf compression-level {
+        if-feature compression-level-support;
+        type uint8 {
+          range "1..3";
+        }
+        description
+          "Access Control List compression level.";
+      }
+    }
+    container access-group-out {
+      description
+        "access-group for outbound direction.";
+      list access-lists {
+        key "acl-name";
+        description
+          "List of common access-list.";
+        leaf acl-name {
+          type ietf-acl:access-control-list-ref;
+          description
+            "Access Control List name.";
+        }
+        choice apply-type {
+          description
+            "Access Control List apply type.";
+          case apply-common {
+            if-feature acl-common-support;
+            leaf common-acl {
+              type empty;
+              description
+                "Common Access Control List.";
+            }
+          }
+          case apply-intf {
+            leaf intf-acl {
+              type empty;
+              description
+                "Interface Access Control List.";
+            }
+          }
+        }
+      }
+      leaf interface-stats {
+        if-feature interface-stats-support;
+        type empty;
+        description
+          "Access Control List per interface statistics.";
+      }
+      leaf hardware-count {
+        if-feature hardware-count-support;
+        type empty;
+        description
+          "Access Control List hardware count.";
+      }
+      leaf compression-level {
+        if-feature compression-level-support;
+        type uint8 {
+          range "1..3";
+        }
+        description
+          "Access Control List compression level.";
+      }
+    }
+  }
+
+  grouping cisco-ports {
+    description
+      "Cisco defined access-list entry port options.";
+    choice port-type {
+      description
+        "Type of access-list entry source/destination ports.";
+      case port-group-ref {
+        if-feature og:og-port-support;
+        description
+          "Reference to cisco port-group.";
+        leaf port-group-name {
+          type og:og-name-ref;
+          description
+            "Reference a port group by the Port Group name.";
+        }
+      }
+      case port-oper-eq {
+        description
+          "Port equal to port-eq.";
+        leaf port-eq {
+          type inet:port-number;
+          description
+            "Port number.";
+        }
+      }
+      case port-oper-eq-noncont {
+        if-feature noncont-port-support;
+        description
+          "Port group include all ports equal to port-eq-noncont.";
+        leaf-list port-eq-noncont {
+          type inet:port-number;
+          description
+            "Port number.";
+        }
+      }
+      case port-oper-neq {
+        description
+          "Port group include all ports not equal to port-neq.";
+        leaf port-neq {
+          type inet:port-number;
+          description
+            "Port number.";
+        }
+      }
+      case port-oper-neq-noncont {
+        if-feature noncont-port-support;
+        description
+          "Port group include all ports not equal "+
+          "to port-neq-noncont.";
+        leaf-list port-neq-noncont {
+          type inet:port-number;
+          description
+            "Port number.";
+        }
+      }
+      case port-oper-lt {
+        description
+          "Port group include all ports less than port-lt";
+        leaf port-lt {
+          type inet:port-number;
+          description
+            "Port number.";
+        }
+      }
+      case port-oper-gt {
+        description
+          "Port group include all ports greater than port-gt";
+        leaf port-gt {
+          type inet:port-number;
+          description
+            "Port number.";
+        }
+      }
+      case port-range {
+        description
+          "Port group includes all ports between port-lower "+
+          "and port-upper (including those)";
+        leaf src-port-lower {
+          type inet:port-number;
+          description
+            "Lower Port number.";
+        }
+        leaf src-port-upper {
+          type inet:port-number;
+          description
+            "Upper Port number.";
+        }
+      }
+    }
+  }
+
+  augment "/ietf-acl:access-lists/ietf-acl:access-list/"+
+    "ietf-acl:access-list-entries/ietf-acl:access-list-entry/"+
+    "ietf-acl:matches/ietf-acl:access-list-entries-type/"+
+    "ietf-acl:access-list-entries-ip" {
+    description
+      "Cisco ip access-list agumentations.";
+    container cisco-access-list-ports {
+      description
+        "Cisco defined access-list entry ports.";
+      choice cisco-access-list-port-type {
+        description
+          "Type of port configurations.";
+        case cisco-service-group {
+          leaf cisco-service-group-cfg {
+            type og:og-name-ref;
+            description
+              "Reference to cisco service-group.";
+          }
+        }
+        case cisco-src-dst-ports {
+          container cisco-src-ports {
+            uses cisco-ports;
+            description
+              "Source ports.";
+          }
+          container cisco-dst-ports {
+            uses cisco-ports;
+            description
+              "Destination ports.";
+          }
+        }
+        case cisco-icmp {
+          when "../../protocol = '1'" {
+            description 
+              "ICMP type and code only apply to icmp protocol.";
+          }
+          description
+            "Icmp type and code.";
+          leaf icmp-type {
+            type uint32 {
+              range "0..255";
+            }
+            description
+              "ICMP message type number.";
+          }
+          leaf icmp-code {
+            type uint32 {
+              range "0..255";
+            }
+            description
+              "ICMP subtype for a given icmp type.";
+          }
+        }
+        case cisco-igmp {
+          when "../../protocol = '2'" {
+            description
+              "IGMP type only apply to igmp protocol.";
+          }
+          leaf igmp-type {
+            type uint32 {
+              range "0..15";
+            }
+            description
+              "IGMP message type (0 to 15) for"+
+              "filtering IGMP packets.";
+          }
+        }
+      }
+    }
+    container nexthop1 {
+      if-feature abf-support;
+      description
+        "Forward to specified nexthop on match against this entry.";
+      choice nexthop-type {
+        description
+          "Type of nexthop options.";
+        leaf ip-address {
+          type inet:ip-address-no-zone;
+          description
+            "Nexthop ip address.";
+        }
+        leaf vrfname {
+          type string;
+          description
+            "Nexthop VRF name.";
+        }
+        leaf trackname {
+          type string;
+          description
+            "Nexthop Track name.";
+        }
+      }
+    }
+    container nexthop2 {
+      if-feature abf-support;
+      description
+        "Forward to specified nexthop on match against this entry.";
+      choice nexthop-type {
+        description
+          "Type of nexthop options.";
+        leaf ip-address {
+          type inet:ip-address-no-zone;
+          description
+            "Nexthop ip address.";
+        }
+        leaf vrfname {
+          type string;
+          description
+            "Nexthop VRF name.";
+        }
+        leaf trackname {
+          type string;
+          description
+            "Nexthop Track name.";
+        }
+      }
+    }
+    container nexthop3 {
+      if-feature abf-support;
+      description
+        "Forward to specified nexthop on match against this entry.";
+      choice nexthop-type {
+        description
+          "Type of nexthop options.";
+        leaf ip-address {
+          type inet:ip-address-no-zone;
+          description
+            "Nexthop ip address.";
+        }
+        leaf vrfname {
+          type string;
+          description
+            "Nexthop VRF name.";
+        }
+        leaf trackname {
+          type string;
+          description
+            "Nexthop Track name.";
+        }
+      }
+    }
+    leaf ip-options {
+      type uint32 {
+        range "0..255";
+      }
+      description
+        "IP options.";
+    }
+    container tcp-flags {
+      when "../protocol = '6'" {
+        description "TCP flags only applies to TCP protocol.";
+      }
+      description
+        "TCP flag bits.";
+      leaf fin {
+        type empty;
+        description
+          "No more data from sender.";
+      }
+      leaf syn {
+        type empty;
+        description
+          "Synchronize sequence numbers.";
+      }
+      leaf rst {
+        type empty;
+        description
+          "Reset the connection.";
+      }
+      leaf psh {
+        type empty;
+        description
+          "Push Function.";
+      }
+      leaf ack {
+        type empty;
+        description
+          "Acknowledgment field significant.";
+      }
+      leaf urg {
+        type empty;
+        description
+          "Urgent Pointer field significant.";
+      }
+    }
+    choice ttl-type {
+      description
+        "Match packets with given time to live values.";
+      leaf ttl-eq {
+        type uint32 {
+          range "0..255";
+        }
+        description
+          "Match packets with time-to-live equal to ttl-eq.";
+      }
+      leaf ttl-neq {
+        type uint32 {
+          range "0..255";
+        }
+        description
+          "Match packets with time-to-live not equal to ttl-neq.";
+      }
+      leaf ttl-gt {
+        type uint32 {
+          range "0..255";
+        }
+        description
+          "Match packets with time-to-live geater than ttl-gt.";
+      }
+      leaf ttl-lt {
+        type uint32 {
+          range "0..255";
+        }
+        description
+          "Match packets with time-to-live less than ttl-lt.";
+      }
+      case ttl-range {
+        leaf ttl-range-lower {
+          type uint32 {
+            range "0..255";
+          }
+          description
+            "Lower ttl number.";
+        }
+        leaf ttl-range-upper {
+          type uint32 {
+            range "0..255";
+          }
+          description
+            "Upper ttl number.";
+        }
+      }
+    }
+    leaf precedence {
+      type uint8 {
+        range "0..7";
+      }
+      description
+        "Match packets with given precedence.";
+    }
+    leaf tos {
+      if-feature tos-support;
+      type uint8 {
+        range "0..15";
+      }
+      description
+        "Match packets with given Term of Service value.";
+    }
+    leaf fragments {
+      type empty;
+      description
+        "Check non-initial fragments.";
+    }
+    leaf log {
+      type empty;
+      description
+        "Log matches against this access-list entry.";
+    }
+    leaf log-input {
+      type empty;
+      description
+        "Log matches against this access-list entry,
+         including input interface.";
+    }
+    leaf counter {
+      if-feature access-list-entry-counter-support;
+      type string;
+      description
+        "Name of counter to aggregate hardware statistics";
+    }
+  }
+  augment "/ietf-acl:access-lists/ietf-acl:access-list/" +
+    "ietf-acl:access-list-entries/ietf-acl:access-list-entry/"+
+    "ietf-acl:matches/ietf-acl:access-list-entries-type/"+
+    "ietf-acl:access-list-entries-ip/"+
+    "ietf-acl:access-list-entries-ip-version" {
+    description "Cisco access-list entry augementations.";
+    case cisco-access-list-entries {
+      description
+        "Cisco defined access-list entry.";
+      choice cisco-source-net-fields {
+        default "cisco-source-ip";
+        description 
+          "Cisco defined source network address.";
+        case cisco-source-ip {
+          leaf src-ip-address {
+            type inet:ip-address-no-zone;
+            description
+              "Source network address.";
+          }
+          leaf src-ip-mask {
+            type inet:ip-address-no-zone;
+            description
+              "Source network mask.";
+          }
+        }
+        leaf cisco-source-og {
+          type og:og-name-ref;
+          description
+            "Source network group.";
+        }
+        leaf cicso-source-any {
+          type empty;
+          description
+            "Any source address.";
+        }
+      }
+      choice cisco-destination-net-fields {
+        default "cisco-destination-ip";
+        description
+          "Cisco defined destination network address.";
+        case cisco-destination-ip {
+          leaf destination-ip-address {
+            type inet:ip-address-no-zone;
+            description
+              "Destination network address.";
+          }
+          leaf destination-ip-mask {
+            type inet:ip-address-no-zone;
+            description
+              "Destination network address.";
+          }
+        }
+        leaf cisco-destination-og-name {
+          type og:og-name-ref;
+          description
+            "Destination network group.";
+        }
+        leaf cicso-destination-any {
+          type empty;
+          description
+            "Any destination address.";
+        }
+      }
+    }
+  }
+  augment "/ietf-acl:access-lists/ietf-acl:access-list/"+
+    "ietf-acl:access-list-entries/ietf-acl:access-list-entry/"+
+    "ietf-acl:matches/ietf-acl:access-list-entries-type" {
+    description "Cisco agumentations for access-list entries.";
+    case access-list-entries-remark {
+      leaf access-list-entry-remak {
+        type string;
+        description
+          "Comment for access list entry.";
+      }
+    }
+  }
+}

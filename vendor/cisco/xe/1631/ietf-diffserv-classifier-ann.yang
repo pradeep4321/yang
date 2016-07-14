@@ -1,0 +1,25 @@
+module ietf-diffserv-classifier-ann {
+  namespace "http://cisco.com/ns/ietf-diffserv-classifier/ann";
+  prefix classifier-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-diffserv-classifier {
+    prefix classifier;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate /classifier:classifiers {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+}

@@ -1,0 +1,30 @@
+module ietf-diffserv-target-ann {
+  namespace "http://cisco.com/ns/ietf-diffserv-target/ann";
+  prefix diffserv-target-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-interfaces {
+    prefix if;
+  } 
+ 
+  import ietf-diffserv-target {
+    prefix target;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate /if:interfaces/if:interface/target:diffserv-target-entry {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+
+}

@@ -1,0 +1,351 @@
+module cisco-og {
+  yang-version 1;
+  namespace "urn:ietf:params:xml:ns:yang:cisco-og";
+  prefix og;
+
+  import ietf-yang-types {
+    prefix ietf;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  organization 
+    "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
+  contact
+    "
+     Author: Hang Shi 
+     hangshi@cisco.com 
+     
+     Author: Shiyang Song
+     shiysong@cisco.com 
+         
+     Author: Yuekun Li
+     yuekli@cisco.com
+     
+    ";
+  description
+    "This YANG module defines a component that describing the "+
+    "configuration of object group."+
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  revision 2015-05-04 {
+    description
+      "Creating base model for netmod.";
+    reference
+      "RFC 6020: YANG - A Data Modeling Language for the 
+       Network Configuration Protocol (NETCONF)";
+  }
+
+  identity og-base {
+    description
+      "Base Object Group type for all "+
+      "Object Group type identifiers.";
+  }
+
+  identity network-og {
+    base og:og-base;
+    description
+      "object group network type";
+  }
+
+  identity port-og {
+    base og:og-base;
+    description
+      "object group port type";
+  }
+
+  identity service-og {
+    base og:og-base;
+    description
+      "object group service type";
+  }
+
+  identity security-og {
+    base og:og-base;
+    description
+      "IP object group security type";
+  }
+
+  typedef og-type {
+    type identityref {
+      base og-base;
+    }
+    description
+      "This type is used to refer to an object-group (OG) type";
+  }
+
+  typedef og-name-ref {
+    type leafref {
+      path "/og:object-groups/og:object-group/og:og-name";
+    }
+    description
+      "A reference to the previously defined object group.";
+  }
+
+  feature og-network-support {
+    description
+      "Support network object group.";
+  }
+
+  feature og-network-range-support {
+    description
+      "Support netwrok object-group ranged entry.";
+  }
+
+  feature og-port-support {
+    description
+      "Support port object group.";
+  }
+
+  feature og-service-support {
+    description
+      "Support service object group.";
+  }
+
+  feature og-security-support {
+    description
+      "Support security object group.";
+  }
+
+  grouping og-service-entry-header {
+    description
+      "Common header for service og entries.";
+    leaf protocol {
+      type uint8;
+      description
+        "Internet Protocol number.";
+    }
+    leaf source {
+      type boolean;
+      description
+        "Indicate this service entry 
+         is applied on source or destination.";
+    }
+  }
+
+  container object-groups {
+    description
+      "The object-groups container contains a list of object-group.";
+    list object-group {
+      key "og-name";
+      description
+        "List of object-groups.";
+      leaf og-name {
+        type string;
+        description
+          "The name of object group.
+           A device MAY restrict the length and value of
+           this name, possibly space and special 
+           characters are not allowed.";
+      }
+      leaf og-type {
+        type og-type;
+        description
+          "Type of Object Group";
+      }
+      container og-entries {
+        description
+          "List of object-group entries";
+        choice og-type {
+          description
+            "Options for different object group entry types";
+          case network-og {
+            if-feature og-network-support;
+            description
+              "network object-group entry";
+            leaf-list og-net-host-entry {
+              type inet:ip-address-no-zone;
+              description
+                "Host Address for object group entry.";
+            }
+            list og-net-netmask-entry {
+              key "net mask";
+              description
+                "Specify network and mask for OG entry.";
+              leaf net {
+                type inet:ip-address-no-zone;
+                description
+                  "Network for OG entry.";
+              }
+              leaf mask {
+                type inet:ip-address-no-zone;
+                description
+                  "Mask for OG entry.";
+              }
+            }
+            list og-net-range-entry {
+              if-feature og-network-range-support;
+              key "upper lower";
+              description
+                "Specific network range for OG entry.";
+              leaf upper {
+                type inet:ip-address-no-zone;
+                description
+                  "Upper bound ip address.";
+              }
+              leaf lower {
+                type inet:ip-address-no-zone;
+                description
+                  "Lower bound ip address.";
+              }
+            }
+            leaf-list og-net-nested-entry {
+              type og-name-ref;
+              description
+                "Reference to predefined object group.";
+            }
+          }
+          case port-og {
+            if-feature og-port-support;
+            description
+              "port object-group entry";
+            leaf-list og-port-eq-entry {
+              type inet:port-number;
+              description
+                "Port for an object group entry";
+            }
+            leaf-list og-port-neq-entry {
+              type inet:port-number;
+              description
+                "Port for an object group entry";
+            }
+            leaf-list og-port-gt-entry {
+              type inet:port-number;
+              description
+                "Port for an object group entry";
+            }
+            leaf-list og-port-lt-entry {
+              type inet:port-number;
+              description
+                "Port for an object group entry";
+            }
+            list og-port-range-entry {
+              key "low  high";
+              description
+                "Specify address range for OG entry ";
+              leaf low {
+                type inet:port-number;
+                description
+                  "low address range for OG entry";
+              }
+              leaf high {
+                type inet:port-number;
+                description
+                  "high address for OG entry";
+              }
+            }
+            leaf-list og-port-netsted-entry {
+              type og-name-ref;
+              description
+                "Reference to predefined object group.";
+            }
+          }
+          case service-og {
+            if-feature og-service-support;
+            description
+              "service object-group entry";
+            list og-service-eq-entry {
+              key "eq protocol source";
+              description 
+                "Service object-group entry match packets with "+
+                "specific protocol, and source/destination port "+
+                "equal to specific port number.";
+              uses og-service-entry-header;
+              leaf eq {
+                type inet:port-number;
+                description
+                  "Port for an object group entry";
+              }
+            }
+            list og-service-neq-entry {
+              key "neq protocol source";
+              description 
+                "Service object-group entry match packets with "+
+                "specific protocol, and source/destination port "+
+                "not equal to specific port number.";
+              uses og-service-entry-header;
+              leaf neq {
+                type inet:port-number;
+                description
+                  "Port for an object group entry";
+              }
+            }
+            list og-service-gt-entry {
+              key "gt protocol source";
+              description 
+                "Service object-group entry match packets with "+
+                "specific protocol, and source/destination port "+
+                "greater than specific port number.";
+              uses og-service-entry-header;
+              leaf gt {
+                type inet:port-number;
+                description
+                  "Port for an object group entry";
+              }
+            }
+            list og-service-lt-entry {
+              key "lt protocol source";
+              description 
+                "Service object-group entry match packets with "+
+                "specific protocol, and source/destination port "+
+                "less than specific port number.";
+              uses og-service-entry-header;
+              leaf lt {
+                type inet:port-number;
+                description
+                  "Port for an object group entry";
+              }
+            }
+            list og-service-range-entry {
+              key "lower upper protocol source";
+              description 
+                "Service object-group entry match packets with "+
+                "specific protocol, and source/destination port "+
+                "within specific port number range.";
+              uses og-service-entry-header;
+              leaf lower {
+                type inet:port-number;
+                description
+                  "low address range for OG entry";
+              }
+              leaf upper {
+                type inet:port-number;
+                description
+                  "high address for OG entry";
+              }
+            }
+            leaf-list og-service-nested-entry {
+              type og-name-ref;
+              description
+                "Reference to predefined object group.";
+            }
+          }
+          case security-og {
+            if-feature og-security-support;
+            description
+              "security object-group entry";
+            leaf-list og-security-eq-entry {
+              type uint16 {
+                range "1..65535";
+              }
+              description
+                "Security tag for an object group entry";
+            }
+            leaf-list og-security-nested-entry {
+              type og-name-ref;
+              description
+                "Reference to predefined object group.";
+            }
+          }
+        }
+      }
+    }
+  }
+}

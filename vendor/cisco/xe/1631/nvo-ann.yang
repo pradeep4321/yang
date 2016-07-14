@@ -1,0 +1,25 @@
+module nvo-ann {
+  namespace "http://cisco.com/ns/nvo/ann";
+  prefix nvo-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import nvo {
+    prefix nvo;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate /nvo:nvo-instances {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+}

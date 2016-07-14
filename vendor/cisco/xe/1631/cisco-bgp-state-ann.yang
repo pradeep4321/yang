@@ -1,0 +1,25 @@
+module cisco-bgp-state-ann {
+  namespace "http://cisco.com/ns/cisco-bgp-state-ann";
+  prefix bgps-ann;
+
+  import cisco-bgp-state {
+    prefix bgps;
+  }
+  
+  import tailf-common {
+    prefix tailf;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+//  tailf:annotate /bgps:bgp-state {
+ //   tailf:callpoint "cia_on_demand"; 
+  //}
+}

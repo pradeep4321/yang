@@ -1,0 +1,267 @@
+module cisco-l2vpn {
+  namespace "urn:cisco:params:xml:ns:yang:l2vpn";
+  prefix l2vpn;
+
+  import ietf-inet-types {
+    prefix "inet";
+  }
+
+  import ietf-interfaces {
+      prefix "if";
+  }
+
+  import cisco-bridge-domain {
+    prefix bd;
+  }
+
+  import cisco-pw {
+    prefix l2vpn-pw;
+  }
+
+  include cisco-vfi;
+  include cisco-vpws;
+
+  organization
+    "Cisco Systems, Inc.";
+
+  contact
+    "Cisco Systems, Inc.
+    Customer Service
+    
+    Postal: 170 W Tasman Drive
+    San Jose, CA 95134
+    
+    Tel: +1 1800 553-NETS
+    
+    E-mail: cs-yang@cisco.com";
+
+  description
+    "Cisco Layer 2 VPN YANG Module";
+
+  revision 2014-12-01 {
+    description "Initial revision";
+    reference "TODO";
+  }
+
+  feature l2vpn-global-shutdown {
+    description
+      "This feature represents the ability to shutdown all l2vpn
+       services feature";
+  }
+
+  feature l2vpn-global-description {
+    description
+      "This feature represents the ability to configure a global
+       description for L2VPN";
+  }
+
+  feature l2vpn-nsr {
+    description
+      "This feature represents the ability to support Non-stop
+       routing for L2VPN";
+  }
+  
+  feature l2vpn-ldp-flap {
+    description
+      "This feature represents the ability to forcing LDP targetted
+       session flap when L2VPN VC flaps";
+  }
+
+  feature l2vpn-manual-mac-withdraw {
+    description
+      "This feature represents the ability to triggen on demand LDP
+       MAC withdraw by user.";
+  }
+
+  container global {
+    description "L2VPN global configurations.";
+
+    leaf router-id {
+      type inet:ip-address;
+      description
+        "Router ID -  IP address";
+    }
+
+    leaf shutdown {
+      if-feature l2vpn-global-shutdown;
+      type boolean;
+      default false;
+      description
+        "Shutdown all l2vpn services";
+    }
+
+    leaf description {
+      if-feature l2vpn-global-description;
+      type string;
+      description
+        "Global level description for L2VPN";
+    }
+
+    leaf nsr {
+      if-feature l2vpn-nsr;
+      type boolean;
+      default false;
+      description
+        "Enable non-stop routing for L2VPN";
+    }
+
+    leaf ldp-flap {
+      if-feature l2vpn-ldp-flap;
+      type boolean;
+      default false;
+      description
+        "Force LDP targeted session to flap when L2VPN VC flaps";
+    }
+
+    leaf auto-discovery {
+      type identityref {
+         base auto-discovery-type;
+       }
+       description
+         "Auto discovery for PW";
+    }
+
+    container auto-discovery-bgp {
+      when "../auto-discovery = 'auto-discovery-bgp-type'" {
+        description
+          "Auto discovery protocol must be BGP to configure
+           BGP signaling protocol parameters.";
+      }
+      description "BGP auto-discovery configurations.";
+
+      container bgp-signaling-protoccol {
+        description
+          "Signaling protocol as BGP.";
+
+        leaf mtu-mismatch-ignore {
+          type boolean;
+          description
+            "Ignore MTU mismatch for auto-discovered PWs";
+        }
+      }
+    }
+  } // end of global config container    
+
+  //l2vpn shared/global oper
+
+  //l2vpn shared/global config
+  rpc clear-l2vpn-service {
+    description
+      "Clear L2VPN service statistics.";
+    reference
+      "IOS/NXOS: clear l2vpn service <>";
+    input {
+      choice filters {
+        description
+          "Filters to select service instances to clear.";
+        case all {
+          leaf all {
+            type empty;
+            description
+              "Clear all L2VPN services.";
+          }
+        }
+        case interface {
+          description
+            "Clear L2VPN services for a given interface.";
+          leaf interface {
+              type if:interface-ref;
+              description
+                "Reference to a member interface of l2vpn services.";
+          }
+        }
+        case neighbor-spec {
+          description
+            "Clear L2VPN service for given peer IP Address/VC ID.";
+          uses l2vpn-pw:pw-neighbor-base-config {
+            description
+              "Peer IP Address and VC ID parameters";
+          }
+        }
+        case vfi-name {
+          description
+            "Clear all services for given VFI instance.";
+          leaf vfi-name {
+            type string;
+            description
+              "Virtual forwarding interface (VFI) name";
+          }
+        }
+        case xconnect-name {
+          description
+            "Clear given xconnect service.";
+          leaf xconnect-name {
+            type string;
+            description
+              "Xconnect instance name";
+          }
+        }
+      }
+    }
+    output {
+      leaf errstr {
+        type string;
+        description
+          "Error message from the device if RPC failed.";
+      }
+    }
+  }
+
+  rpc send-mac-withdraw {
+    if-feature l2vpn-manual-mac-withdraw;
+    description
+      "Trigger LDP MAC withdraw on xconnects MAC widthdraw
+       provides faster convergence by removing (or unlearning) MAC
+       addresses that have been dynamically learned.";
+    reference
+      "XR: l2vpn send mac-withdraw { bridge | xconnect } <>";
+    input {
+      choice targets {
+        mandatory true;
+        description
+          "Select target instance to send mac-withdraw.";
+        case bd-target {
+          description
+            "When bridge-domain is specified as target, LDP mac
+             withdraw message is sent to all access pseudowires and
+             pseudowires configured under Virtual Forwarding Instance
+             (VFIs) for target bridge-domain.";
+          choice bd-target {
+            description
+              "Select bridge-domains to send mac-withdraw.";
+            leaf all {
+              type empty;
+              description
+                "Send LDP MAC widthdraw on all bridge-domains
+                 configured on the device.";
+            }
+            leaf bd-id {
+              type string;
+              description
+                "A single bridge-domain identified by this leaf.";
+            }
+            leaf bg-id {
+              if-feature bd:configurable-bd-groups;
+              type string;
+              description
+                "All bridge-domains under this bridge-group.";
+            }
+          }
+        }
+        case xconnect-target {
+          uses l2vpn-pw:pw-neighbor-base-config {
+            description
+              "Peer IP Address and VC ID parameters.";
+          }
+        }
+      }
+    } // end input
+    output {
+      leaf errstr {
+        type string;
+        description
+          "Error message from the device if RPC failed.";
+      }
+    }
+  } // mac widthdraw rpc
+} // end of l2vpn module

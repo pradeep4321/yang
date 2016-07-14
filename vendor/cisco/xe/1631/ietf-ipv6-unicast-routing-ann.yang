@@ -1,0 +1,30 @@
+module ietf-ipv6-unicast-routing-ann {
+  namespace "http://cisco.com/ns/ietf-ipv6-unicast-routing/ann";
+  prefix v6ur-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-routing {
+    prefix routing;
+  }
+
+  import ietf-ipv6-unicast-routing {
+    prefix v6-unicast;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate "/routing:routing/routing:routing-instance/routing:routing-protocols/"
+           + "routing:routing-protocol/routing:static-routes/v6-unicast:ipv6" {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+  }
+}

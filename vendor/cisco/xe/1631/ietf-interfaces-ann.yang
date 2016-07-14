@@ -1,0 +1,35 @@
+module ietf-interfaces-ann {
+  namespace "http://cisco.com/ns/ietf-interfaces-ann";
+  prefix if-ann;
+
+  import ietf-yang-types {
+		prefix yang;
+	}
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate /if:interfaces {
+    tailf:callpoint "ec_genet" { tailf:transform true; }
+    tailf:annotate if:interface/if:enabled {
+      tailf:code-name leaf_enabled;
+    }
+  }
+//  tailf:annotate /if:interfaces-state {
+//    tailf:callpoint "cia_on_demand";
+//  }
+}

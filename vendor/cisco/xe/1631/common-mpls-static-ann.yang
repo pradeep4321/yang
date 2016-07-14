@@ -1,0 +1,34 @@
+module common-mpls-static-ann {
+  namespace "http://cisco.com/ns/mpls-static/ann";
+  prefix mpls-ann;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import common-mpls-static {
+    prefix ms;
+  }
+
+  description
+    "Copyright (c) 2016 by Cisco Systems, Inc."+
+    "All rights reserved.";
+
+  revision 2016-03-30 {
+    description
+      "Update description with copyright notice.";
+  }
+
+  tailf:annotate "/ms:mpls-static/ms:mpls-static-cfg" {
+    tailf:callpoint "ec_genet" {
+      tailf:transform true;
+      tailf:config true;
+    }
+  }
+
+  tailf:annotate "/ms:mpls-static/ms:mpls-static-state" {
+    tailf:cdb-oper;
+//    tailf:callpoint "cia_on_demand";
+  }
+
+}

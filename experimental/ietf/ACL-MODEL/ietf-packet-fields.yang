@@ -8,9 +8,6 @@ module ietf-packet-fields {
   import ietf-yang-types {
     prefix yang;
   }
-  import ietf-interfaces {
-    prefix if;
-  }
   organization "IETF NETMOD (NETCONF Data Modeling Language) Working 
                 Group";
   contact
@@ -25,7 +22,7 @@ module ietf-packet-fields {
     Editor: Kiran Agrahara Sreenivasa
     kkoushik@cisco.com
     Editor: Lisa Huang
-    lyihuang@juniper.net
+    lyihuang16@gmail.com
     Editor: Dana Blair
     dblair@cisco.com";
   description
@@ -43,7 +40,7 @@ module ietf-packet-fields {
     (http://trustee.ietf.org/license-info).
     This version of this YANG module is part of RFC XXXX; see
     the RFC itself for full legal notices.";
-  revision 2016-02-18 {
+  revision 2016-07-08 {
     description
       "Initial version of packet fields used by
       ietf-access-control-list";
@@ -180,16 +177,4 @@ module ietf-packet-fields {
       Networks: Overview and Architecture.";
   }
 
-  grouping metadata {
-    description
-      "Fields associated with a packet whick are not in
-      the header.";
-    leaf input-interface {
-      type if:interface-ref {
-        require-instance false;
-      }
-      description
-        "Packet was received on this interface.";
-    }
-  }
 }

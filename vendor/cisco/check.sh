@@ -7,7 +7,7 @@
 # typically not available locally.
 #
 vendor_dir="vendor/cisco"
-to_check="xr/530 xr/531 xr/532 xr/533 xr/600 xr/611"
+to_check="xr/530 xr/531 xr/532 xr/533 xr/600 xr/601 xr/611"
 pyang_flags="-p ../../../../standard/ietf/DRAFT"
 
 checkDir () {
